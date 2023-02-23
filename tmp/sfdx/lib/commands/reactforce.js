@@ -9,20 +9,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const os = require("os");
 const command_1 = require("@salesforce/command");
 const core_1 = require("@salesforce/core");
-const packageJson = require("../package.json");
+const packageJson = require("../../package.json");
 // Initialize Messages with the current plugin directory
 core_1.Messages.importMessagesDirectory(__dirname);
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
-const messages = core_1.Messages.loadMessages('sfdx-react-plugin', 'org');
-class Index extends command_1.SfdxCommand {
+const messages = core_1.Messages.loadMessages('sfdx-react-plugin', 'reactforce');
+class Reactforce extends command_1.SfdxCommand {
     async run() {
-        this.ux.log('Sfdx react plugin root' + packageJson.version);
-        // Return an object to be displayed with --json
+        if (this.flags.version) {
+            this.ux.log(messages.getMessage("versionDescription") + " " + packageJson.version);
+        }
+        else {
+            this.ux.log(messages.getMessage("welcomeDescription"));
+        }
         return {};
     }
 }
-exports.default = Index;
-Index.description = messages.getMessage('commandDescription');
-Index.examples = messages.getMessage('examples').split(os.EOL);
+exports.default = Reactforce;
+Reactforce.description = messages.getMessage('commandDescription');
+Reactforce.examples = messages.getMessage('examples').split(os.EOL);
+Reactforce.flagsConfig = {
+    // can pass either --version or -v
+    version: command_1.flags.boolean({
+        char: 'v',
+        description: messages.getMessage('versionFlagDescription'),
+    }),
+};
 //# sourceMappingURL=reactforce.js.map

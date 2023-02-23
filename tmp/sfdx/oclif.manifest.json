@@ -1,0 +1,67 @@
+{
+  "version": "0.0.8",
+  "commands": {
+    "reactforce": {
+      "id": "reactforce",
+      "description": "print welcome message and reactforce version",
+      "strict": true,
+      "usage": "<%= command.id %> [-v] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]",
+      "pluginName": "sfdx-react-plugin",
+      "pluginAlias": "sfdx-react-plugin",
+      "pluginType": "core",
+      "aliases": [],
+      "examples": [
+        "sfdx reactforce",
+        "sfdx reactforce --version"
+      ],
+      "flags": {
+        "json": {
+          "name": "json",
+          "type": "boolean",
+          "description": "format output as json",
+          "allowNo": false
+        },
+        "loglevel": {
+          "name": "loglevel",
+          "type": "option",
+          "description": "logging level for this command invocation",
+          "required": false,
+          "helpValue": "(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)",
+          "multiple": false,
+          "options": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "fatal",
+            "TRACE",
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR",
+            "FATAL"
+          ],
+          "default": "warn"
+        },
+        "version": {
+          "name": "version",
+          "type": "boolean",
+          "char": "v",
+          "description": "version to print",
+          "allowNo": false
+        }
+      },
+      "args": {},
+      "flagsConfig": {
+        "version": {
+          "kind": "boolean",
+          "char": "v",
+          "description": "version to print",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

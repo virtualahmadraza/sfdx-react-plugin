@@ -1,0 +1,10 @@
+{
+  "commandDescription": "print welcome message and reactforce version",
+  "versionFlagDescription": "version to print",
+  "versionDescription": "Reactforce version",
+  "welcomeDescription": "Welcome to reactforce salesforce plugin",
+  "examples": [
+    "sfdx reactforce",
+    "sfdx reactforce --version"
+  ]
+}
