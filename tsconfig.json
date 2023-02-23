@@ -9,7 +9,9 @@
     "declaration": true,
     "moduleResolution": "node",
     "alwaysStrict": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["./src/**/*.ts"]
 }
