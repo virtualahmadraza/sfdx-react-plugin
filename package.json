@@ -51,8 +51,8 @@
     "commands": "./lib/commands",
     "bin": "sfdx",
     "topics": {
-      "reactforce": {
-        "description": "Reactforce main command"
+      "sfdx-react-plugin": {
+        "description": "sfdx-react-plugin main command"
       }
     }
   },

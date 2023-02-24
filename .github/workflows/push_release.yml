@@ -13,6 +13,15 @@ jobs:
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
+      - name: Auto Increment Version
+        uses: MCKanpolat/auto-semver-action@1.0.5
+        id: versioning
+        with:
+          releaseType: patch 
+          incrementPerCommit: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Next Release Number
+        run: echo ${{ steps.versioning.outputs.version }}
       - name: Install Dependencies
         run: npm install
       - name: Start Unit Tests
