@@ -1,6 +1,6 @@
 {
   "name": "sfdx-react-plugin",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "author": "Ahmad Raza @virtualahmadraza",
   "bugs": "https://github.com/virtualahmadraza/sfdx-react-plugin/issues",
   "dependencies": {
