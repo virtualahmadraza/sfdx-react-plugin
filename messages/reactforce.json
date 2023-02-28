@@ -1,6 +1,6 @@
 {
-  "commandDescription": "print welcome message and reactforce version",
-  "versionFlagDescription": "version to print",
+  "commandDescription": "Shows welcome message and reactforce version",
+  "versionFlagDescription": "version to show",
   "versionDescription": "Reactforce version",
   "welcomeDescription": "Welcome to reactforce salesforce plugin",
   "examples": [
