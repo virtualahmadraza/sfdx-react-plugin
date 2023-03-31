@@ -11,7 +11,7 @@ const downloadGit = util.promisify(download);
 // Initialize Messages with the current plugin directory
 Messages.importMessagesDirectory(__dirname);
 
-const messages = Messages.loadMessages('@cloudpremise/reactforce', 'init');
+const messages = Messages.loadMessages('sfdx-react-plugin', 'init');
 
 export default class ReactforceInit extends SfdxCommand {
     public static description = messages.getMessage('commandDescription');
