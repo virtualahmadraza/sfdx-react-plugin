@@ -2,8 +2,15 @@ const path = require('path');
 const fs = require('fs-extra');
 const gitclone = require('git-clone');
 const rm = require('rimraf').sync;
+import { SfProject } from "@salesforce/core/lib/sfProject";
 
 async function getRootPath(): Promise<string>{
+    try{
+        const project = await SfProject.resolve();
+        return project.getPath();
+    }catch(e){
+        //Silent and proceed for below code
+    }
     let projectRoot = __dirname;
     while (projectRoot.length >= 0) {
         try {
