@@ -1,10 +1,10 @@
 {
   "name": "sfdx-react-plugin",
   "description": "A framework for developing and deploying ReactJS applications on Salesforce.com",
-  "version": "0.0.8",
-  "author": "Greg Cook @cloudpremise",
+  "version": "1.0.1",
+  "author": "Ahmad Raza @virtualahmadraza",
   "bugs": {
-    "url": "https://github.com/sfdx-react-plugin/issues"
+    "url": "https://github.com/virtualahmadraza/sfdx-react-plugin/issues"
   },
   "dependencies": {
     "@oclif/core": "^1",
@@ -47,7 +47,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/sfdx-react-plugin",
+  "homepage": "https://github.com/virtualahmadraza/sfdx-react-plugin",
   "keywords": [
     "sfdx-plugin"
   ],
@@ -70,7 +70,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sfdx-react-plugin.git"
+    "url": "git+https://github.com/virtualahmadraza/sfdx-react-plugin.git"
   },
   "scripts": {
     "build": "tsc -p .",
