@@ -1,0 +1,19 @@
+{
+  "commandDescription": "Initialize reactforce",
+  "staticResourcesFlagDesc": "Relative path for static resources",
+  "repositoryFlagDesc": "Repository name for theme static resources",
+  "branchFlagDesc": "Branch name for theme static resources",
+  "respositoryAlreadyCloned": "Assets repository already cloned!",
+  "cloningAssets": "Cloning assets",
+  "assetsCloned": "Assets repository cloned!",
+  "cloningFailed": "Failed while fetching the template!",
+  "restrictedRespository": "Is possible that you are trying to create the project in a restricted directory",
+  "copyingStaticResources": "Copying static resources",
+  "staticResourcesCopied": "Static resources copied",
+  "initCommandSuccess": "Reactforce initialized.",
+  "examples": [
+    "sfdx reactforce init",
+    "sfdx reactforce init --static-resources \"/force-app/main/default/staticresources\" --repository \"cloudpremise/reactforce-assets\" --branch \"main\"",
+    "sfdx reactforce init -s=\"/force-app/main/default/staticresources\" -r=\"cloudpremise/reactforce-assets\" -b=\"main\""
+  ]
+}

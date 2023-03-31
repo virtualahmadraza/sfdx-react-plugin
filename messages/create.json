@@ -1,0 +1,33 @@
+{
+  "commandDescription": "Creates react app and prepares salesforce project for react app rendering.",
+  "appNameFlagDesc": "React app name",
+  "templateNameFlagDesc": "Template name for salesforce and react custom files",
+  "repositoryFlagDesc": "Template repository name",
+  "templateBranchFlagDesc": "Repository branch name",
+  "craTemplateFlagDesc": "React app custom template name",
+  "installingReactApp": "Installing react app",
+  "reactAppInstalled": "React app installed",
+  "errorInstallingReactApp": "Error installing react app",
+  "reactAppNotInstalled": "App not installed",
+  "installingDependencies": "Installing the required dependencies",
+  "dependenciesInstalled": "React app dependencies updated.",
+  "dependenciesInstallationFailed": "Failed while installing the dependencies!",
+  "templatesAlreadyCloned": "Templates repository already cloned!",
+  "cloningTemplates": "Cloning templates",
+  "templatesCloned": "Templates repository cloned!",
+  "cloningFailed": "Failed while fetching the template!",
+  "restrictedRespository": "Is possible that you are trying to create the project in a restricted directory",
+  "salesforceFilesCopied": "Salesforce files copied",
+  "reactFilesCopied": "React files copied",
+  "creatingReactAppBuild": "Creating react app build",
+  "reactAppBuildReady": "React app build ready.",
+  "errorCreatingReactAppBuild": "Failed creating react build!",
+  "createCommandSuccess": "React app and salesforce setup succeeeded.",
+  "examples": [
+    "sfdx reactforce create",
+    "sfdx reactforce create --app-name \"ReactAppName\"",
+    "sfdx reactforce create -a=\"ReactAppName\"",
+    "sfdx reactforce create --app-name \"ReactAppName\" --template-name \"default\" --repository \"cloudpremise/reactforce-templates\" --branch \"main\"",
+    "sfdx reactforce create -a=\"ReactAppName\"-t=\"default\" -r=\"cloudpremise/reactforce-templates\" -b=\"main\""
+  ]
+}

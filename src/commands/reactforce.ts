@@ -15,7 +15,7 @@ Messages.importMessagesDirectory(__dirname);
 
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
-const messages = Messages.loadMessages('sfdx-react-plugin', 'reactforce');
+const messages = Messages.loadMessages('@cloudpremise/reactforce', 'reactforce');
 
 export default class Reactforce extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
