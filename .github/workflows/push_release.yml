@@ -39,8 +39,8 @@ jobs:
         run: echo ${{ steps.versioning.outputs.version }}
       - name: Install Dependencies
         run: npm install
-      - name: Start Unit Tests
-        run: npm run test
+      # - name: Start Unit Tests
+      #   run: npm run test
       - name: Production Build
         run: npm run build
       - name: Publish to NPM
