@@ -81,6 +81,8 @@ export default class ReactforceInit extends SfdxCommand {
         const reactforceFolder = path.join(roothPath, "/reactforce");
         const reactforceConfig = path.join(roothPath, "/reactforce/config.json");
         // this.ux.log(JSON.stringify(flags, null, 2));
+
+        this.ux.log("Reactforce path = "+reactforceFolder);
         
         if (!fs.existsSync(reactforceFolder)){
             fs.mkdirSync(reactforceFolder);

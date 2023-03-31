@@ -60,6 +60,7 @@ export default class ReactforceCreate extends SfdxCommand {
   private async installReactApp(flags: object, reactforcePath: string, appName: string): Promise<void>{
     this.ux.startSpinner(messages.getMessage('installingReactApp'));
     try {
+        this.ux.log("Installing react in = "+reactforcePath);
         process.chdir(reactforcePath);
         const craTemplate = flags['cra-template'];
         let reactAppCommand = 'npx create-react-app '+appName.toLowerCase()+' --template '+craTemplate+' -y';
