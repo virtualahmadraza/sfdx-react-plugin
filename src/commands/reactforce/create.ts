@@ -153,8 +153,26 @@ export default class ReactforceCreate extends SfdxCommand {
     const staticResourceName = appName;
     const templatePath = path.join(templatesPath, "/templates/"+template+"/sf");
     const classesPath = path.join(roothPath, salesforcePath+"/classes");
+    
 
     //Copy controller for visual force page
+    this.modifyVisualForceController(templatePath, roothPath, classesPath, salesforcePath, controllerName);
+    
+    //Copy controller for lightning component
+    this.modifyLightningController(appName, templatePath, roothPath, salesforcePath);
+    
+    //Copy visual force page
+    this.modifyVisualForcePage(templatePath, roothPath, salesforcePath, visualForcePageName, controllerName, staticResourceName);
+
+    //Create lightning component
+    this.createLightningComponent(appName, roothPath, templatePath, salesforcePath);
+    
+    //Create static resource for react app
+    this.createReactAppStaticResource(templatePath, roothPath, salesforcePath, staticResourceName);
+    
+    this.ux.log(messages.getMessage('salesforceFilesCopied'));
+  }
+  private async modifyVisualForceController(templatePath, roothPath, classesPath, salesforcePath, controllerName): Promise<void> {
     const controllerSrcPath = path.join(templatePath, "/classes/rfPrototypeCtrl.cls");
     const controllerSrcPathXml = path.join(templatePath, "/classes/rfPrototypeCtrl.cls-meta.xml");
     const controllerDestPath = path.join(roothPath, salesforcePath+"/classes/"+controllerName+".cls");
@@ -162,7 +180,7 @@ export default class ReactforceCreate extends SfdxCommand {
     if (!fs.existsSync(classesPath)){
         fs.mkdirSync(classesPath);
     }
-    if(!fs.existsSync(controllerDestPath)){        
+    if(!fs.existsSync(controllerDestPath)){
         let controllerContents = fs.readFileSync(controllerSrcPath, "utf8");
         controllerContents = controllerContents.replace(/rfPrototypeCtrl/g, () => {return controllerName;});
         fs.writeFileSync(controllerDestPath, controllerContents);
@@ -170,8 +188,8 @@ export default class ReactforceCreate extends SfdxCommand {
     if(!fs.existsSync(controllerDestPathXml)){
         fs.copyFileSync(controllerSrcPathXml, controllerDestPathXml);
     }
-
-    //Copy controller for lightning component
+  }
+  private async modifyLightningController(appName, templatePath, roothPath, salesforcePath): Promise<void> {
     const ltgControllerName = appName+"LtgCtrl";
     const ltgControllerSrcPath = path.join(templatePath, "/classes/rfPrototypeLtgCtrl.cls");
     const ltgControllerSrcPathXml = path.join(templatePath, "/classes/rfPrototypeLtgCtrl.cls-meta.xml");
@@ -185,9 +203,8 @@ export default class ReactforceCreate extends SfdxCommand {
     if(!fs.existsSync(ltgControllerDestPathXml)){
         fs.copyFileSync(ltgControllerSrcPathXml, ltgControllerDestPathXml);
     }
-
-    
-    //Copy visual force page
+  }
+  private async modifyVisualForcePage(templatePath, roothPath, salesforcePath, visualForcePageName, controllerName, staticResourceName) : Promise<void> {
     const pagesPath = path.join(roothPath, salesforcePath+"/pages");
     const vfPageSrcPath = path.join(templatePath, "/pages/rfPrototypeVf.page");
     const vfPageSrcPathXml = path.join(templatePath, "/pages/rfPrototypeVf.page-meta.xml");
@@ -205,8 +222,93 @@ export default class ReactforceCreate extends SfdxCommand {
     if(!fs.existsSync(vfPageDestPathXml)){
         fs.copyFileSync(vfPageSrcPathXml, vfPageDestPathXml);
     }
+  }
+  private async createLightningComponent(appName, roothPath, templatePath, salesforcePath): Promise<void> {
+    const auraPath = path.join(roothPath, salesforcePath+"/aura");
+    const ltgComponentName = appName+"Ltg";
+    const ltgSrcComponentPath = path.join(templatePath, "/aura/rfPrototypeLtg");    
+    const ltgDestComponentPath = path.join(auraPath, ltgComponentName);
+    if (!fs.existsSync(auraPath)){
+        fs.mkdirSync(auraPath);
+    }
+    if (!fs.existsSync(ltgDestComponentPath)){
+        fs.mkdirSync(ltgDestComponentPath);
+    }
 
-    //Create static resource for react app
+    const auraDocSrcPath = path.join(ltgSrcComponentPath, "rfPrototypeLtg.auradoc");
+    const auraDocDestPath = path.join(ltgDestComponentPath, ltgComponentName+".auradoc");
+    if(!fs.existsSync(auraDocDestPath)){
+        let auraDocContents = fs.readFileSync(auraDocSrcPath, "utf8");
+        auraDocContents = auraDocContents.replace(/rfPrototypeLtg/g, () => {return ltgComponentName;});
+        fs.writeFileSync(auraDocDestPath, auraDocContents);
+    }
+
+    const componentSrcPath = path.join(ltgSrcComponentPath, "rfPrototypeLtg.cmp");
+    const componentDestPath = path.join(ltgDestComponentPath, ltgComponentName+".cmp");
+    if(!fs.existsSync(componentDestPath)){
+        let componentContents = fs.readFileSync(componentSrcPath, "utf8");
+        componentContents = componentContents.replace(/rfPrototypeLtg/g, () => {return ltgComponentName;});
+        fs.writeFileSync(componentDestPath, componentContents);
+    }
+
+    const componentXmlSrcPath = path.join(ltgSrcComponentPath, "rfPrototypeLtg.cmp-meta.xml");
+    const componentXmlDestPath = path.join(ltgDestComponentPath, ltgComponentName+".cmp-meta.xml");
+    if(!fs.existsSync(componentXmlDestPath)){
+        let xmlContents = fs.readFileSync(componentXmlSrcPath, "utf8");
+        xmlContents = xmlContents.replace(/rfPrototypeLtg/g, () => {return ltgComponentName;});
+        fs.writeFileSync(componentXmlDestPath, xmlContents);
+    }
+
+    const cssSrcPath = path.join(ltgSrcComponentPath, "rfPrototypeLtg.css");
+    const cssDestPath = path.join(ltgDestComponentPath, ltgComponentName+".css");
+    if(!fs.existsSync(cssDestPath)){
+        let cssContents = fs.readFileSync(cssSrcPath, "utf8");
+        cssContents = cssContents.replace(/rfPrototypeLtg/g, () => {return ltgComponentName;});
+        fs.writeFileSync(cssDestPath, cssContents);
+    }
+
+    const designSrcPath = path.join(ltgSrcComponentPath, "rfPrototypeLtg.design");
+    const designDestPath = path.join(ltgDestComponentPath, ltgComponentName+".design");
+    if(!fs.existsSync(designDestPath)){
+        let designContents = fs.readFileSync(designSrcPath, "utf8");
+        designContents = designContents.replace(/rfPrototypeLtg/g, () => {return ltgComponentName;});
+        fs.writeFileSync(designDestPath, designContents);
+    }
+
+    const svgSrcPath = path.join(ltgSrcComponentPath, "rfPrototypeLtg.svg");
+    const svgDestPath = path.join(ltgDestComponentPath, ltgComponentName+".svg");
+    if(!fs.existsSync(svgDestPath)){
+        let svgContents = fs.readFileSync(svgSrcPath, "utf8");
+        svgContents = svgContents.replace(/rfPrototypeLtg/g, () => {return ltgComponentName;});
+        fs.writeFileSync(svgDestPath, svgContents);
+    }
+
+    const controllerSrcPath = path.join(ltgSrcComponentPath, "rfPrototypeLtgController.js");
+    const controllerDestPath = path.join(ltgDestComponentPath, ltgComponentName+"Controller.js");
+    if(!fs.existsSync(controllerDestPath)){
+        let controllerContents = fs.readFileSync(controllerSrcPath, "utf8");
+        controllerContents = controllerContents.replace(/Resource.rfPrototypeLtg/g, () => {return "Resource."+appName;});
+        controllerContents = controllerContents.replace(/rfPrototypeLtgController/g, () => {return ltgComponentName+"Controller";});
+        fs.writeFileSync(controllerDestPath, controllerContents);
+    }
+
+    const helperSrcPath = path.join(ltgSrcComponentPath, "rfPrototypeLtgHelper.js");
+    const helperDestPath = path.join(ltgDestComponentPath, ltgComponentName+"Helper.js");
+    if(!fs.existsSync(helperDestPath)){
+        let helperContents = fs.readFileSync(helperSrcPath, "utf8");
+        helperContents = helperContents.replace(/rfPrototypeLtgHelper/g, () => {return ltgComponentName+"Helper";});
+        fs.writeFileSync(helperDestPath, helperContents);
+    }
+
+    const rendererSrcPath = path.join(ltgSrcComponentPath, "rfPrototypeLtgRenderer.js");
+    const rendererDestPath = path.join(ltgDestComponentPath, ltgComponentName+"Renderer.js");
+    if(!fs.existsSync(rendererDestPath)){
+        let rendererContents = fs.readFileSync(rendererSrcPath, "utf8");
+        rendererContents = rendererContents.replace(/rfPrototypeLtgRenderer/g, () => {return ltgComponentName+"Renderer";});
+        fs.writeFileSync(rendererDestPath, rendererContents);
+    }
+  }
+  private async createReactAppStaticResource(templatePath, roothPath, salesforcePath, staticResourceName): Promise<void> {
     const staticResourcesPath = path.join(roothPath, salesforcePath+"/staticresources");
     const staticResourceCustomerPortalPath = path.join(roothPath, salesforcePath+"/staticresources/"+staticResourceName);
     const staticResourceSrcPath = path.join(templatePath, "/staticresources/CustomerPortal.resource-meta.xml");
@@ -222,8 +324,8 @@ export default class ReactforceCreate extends SfdxCommand {
         staticResourceXmlContents = staticResourceXmlContents.replace(/CustomerPortal/g, () => {return staticResourceName;});
         fs.writeFileSync(staticResourceDestPath, staticResourceXmlContents);
     }
-    this.ux.log(messages.getMessage('salesforceFilesCopied'));
   }
+
   private async modifyReactPackage(flags: object, templatesPath: string, reactAppPath: string): Promise<void> {
     const appName = flags['app-name'];
     const template = flags['template-name'];
