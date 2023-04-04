@@ -12,6 +12,7 @@ import { getRootPath, download } from "../../utils/helper";
 const util = require('util');
 const path = require('path');
 const fs = require('fs-extra');
+const rm = require('rimraf').sync;
 const exec = util.promisify(require('child_process').exec);
 const downloadGit = util.promisify(download);
 
@@ -21,7 +22,7 @@ Messages.importMessagesDirectory(__dirname);
 
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
-const messages = Messages.loadMessages('sfdx-react-plugin', 'create');
+const messages = Messages.loadMessages('@cloudpremise/reactforce', 'create');
 
 export default class ReactforceCreate extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
@@ -60,7 +61,6 @@ export default class ReactforceCreate extends SfdxCommand {
   private async installReactApp(flags: object, reactforcePath: string, appName: string): Promise<void>{
     this.ux.startSpinner(messages.getMessage('installingReactApp'));
     try {
-        this.ux.log("Installing react in = "+reactforcePath);
         process.chdir(reactforcePath);
         const craTemplate = flags['cra-template'];
         let reactAppCommand = 'npx create-react-app '+appName.toLowerCase()+' --template '+craTemplate+' -y';
@@ -301,6 +301,7 @@ export default class ReactforceCreate extends SfdxCommand {
     const appName = flags['app-name'];
     
     const reactforceFolder = path.join(roothPath, "/reactforce");
+    const tempFolder = path.join(reactforceFolder, "/.tmp");
     const reactAppPath = reactforceFolder+"/"+appName.toLowerCase();
     const reactAppPackageJsonPath = path.join(reactAppPath, "package.json");
 
@@ -317,7 +318,7 @@ export default class ReactforceCreate extends SfdxCommand {
     }
     
     //Clone github template
-    const templatesPath = await this.cloneTemplate(flags, reactforceFolder);
+    const templatesPath = await this.cloneTemplate(flags, tempFolder);
 
     //Modify salesforce package
     await this.modifySalesforcePackage(flags, roothPath, templatesPath);
@@ -327,6 +328,7 @@ export default class ReactforceCreate extends SfdxCommand {
 
     //Create react app build
     await this.createReactBuild(reactAppPath);
+    await rm(tempFolder, {});
     this.ux.log(messages.getMessage("createCommandSuccess"));
     return {  };
   }

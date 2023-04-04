@@ -6,12 +6,13 @@ import { getRootPath, download } from "../../utils/helper";
 const path = require('path');
 const fs = require('fs-extra');
 const util = require('util');
+const rm = require('rimraf').sync;
 const downloadGit = util.promisify(download);
 
 // Initialize Messages with the current plugin directory
 Messages.importMessagesDirectory(__dirname);
 
-const messages = Messages.loadMessages('sfdx-react-plugin', 'init');
+const messages = Messages.loadMessages('@cloudpremise/reactforce', 'init');
 
 export default class ReactforceInit extends SfdxCommand {
     public static description = messages.getMessage('commandDescription');
@@ -79,10 +80,9 @@ export default class ReactforceInit extends SfdxCommand {
         const {flags} = await this.parse(ReactforceInit);
         const roothPath =  await getRootPath();
         const reactforceFolder = path.join(roothPath, "/reactforce");
+        const tempFolder = path.join(reactforceFolder, "/.tmp");
         const reactforceConfig = path.join(roothPath, "/reactforce/config.json");
         // this.ux.log(JSON.stringify(flags, null, 2));
-
-        this.ux.log("Reactforce path = "+reactforceFolder);
         
         if (!fs.existsSync(reactforceFolder)){
             fs.mkdirSync(reactforceFolder);
@@ -95,10 +95,11 @@ export default class ReactforceInit extends SfdxCommand {
         }
         
         //Clone github template
-        const templatesPath = await this.cloneTemplate(reactforceFolder, flags);
+        const templatesPath = await this.cloneTemplate(tempFolder, flags);
 
         //Copy template static resource into salesforce package
         await this.copyStaticResources(flags, roothPath, templatesPath);
+        await rm(tempFolder, {});
         this.ux.log(messages.getMessage('initCommandSuccess'));
         return {  };
     }
