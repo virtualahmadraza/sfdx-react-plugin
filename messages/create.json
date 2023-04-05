@@ -5,6 +5,7 @@
   "repositoryFlagDesc": "Template repository name",
   "templateBranchFlagDesc": "Repository branch name",
   "craTemplateFlagDesc": "React app custom template name",
+  "vanillaFlagDesc": "Modify react app to allow custom changes for salesforce",
   "installingReactApp": "Installing react app",
   "reactAppInstalled": "React app installed",
   "errorInstallingReactApp": "Error installing react app",
