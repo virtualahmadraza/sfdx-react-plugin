@@ -56,6 +56,11 @@ export default class ReactforceCreate extends SfdxCommand {
         description: messages.getMessage('craTemplateFlagDesc'),
         default: 'cra-template'
     }),
+    'vanilla': flags.boolean({
+        char: 'v',
+        description: messages.getMessage('vanillaFlagDesc'),
+        default: false
+    }),
   }
 
   private async installReactApp(flags: object, reactforcePath: string, appName: string): Promise<void>{
@@ -84,7 +89,8 @@ export default class ReactforceCreate extends SfdxCommand {
         const packageJsonContents = fs.readFileSync(packageJson, "utf8");
         let json = JSON.parse(packageJsonContents);
         json['scripts'] = {
-            "start": "react-app-rewired start",
+            "start": "SET HTTPS=true && react-app-rewired start",
+            "start-mac": "HTTPS=true PORT=443 react-app-rewired start",
             "build": "react-app-rewired build",
             "test": "react-app-rewired test --env=jsdom",
             "eject": "react-scripts eject",
@@ -169,6 +175,9 @@ export default class ReactforceCreate extends SfdxCommand {
     
     //Create static resource for react app
     this.createReactAppStaticResource(templatePath, roothPath, salesforcePath, staticResourceName);
+
+    //Create flexipage for react app
+    this.createFlexipage(appName, roothPath, templatePath, salesforcePath);
     
     this.ux.log(messages.getMessage('salesforceFilesCopied'));
   }
@@ -308,6 +317,20 @@ export default class ReactforceCreate extends SfdxCommand {
         fs.writeFileSync(rendererDestPath, rendererContents);
     }
   }
+  private async createFlexipage(appName, roothPath, templatePath, salesforcePath): Promise<void> {
+    const flexipagesPath = path.join(roothPath, salesforcePath+"/flexipages");
+    const ltgComponentName = appName+"Ltg";
+    const flexipageSrcComponentPath = path.join(templatePath, "/flexipages/rfPrototypeLtg.flexipage-meta.xml");    
+    const flexipageDestComponentPath = path.join(flexipagesPath, ltgComponentName+".flexipage-meta.xml");
+    if (!fs.existsSync(flexipagesPath)){
+        fs.mkdirSync(flexipagesPath);
+    }
+    if(!fs.existsSync(flexipageDestComponentPath)){
+        let flexipageContents = fs.readFileSync(flexipageSrcComponentPath, "utf8");
+        flexipageContents = flexipageContents.replace(/rfPrototypeLtg/g, () => {return ltgComponentName;});
+        fs.writeFileSync(flexipageDestComponentPath, flexipageContents);
+    }
+  }
   private async createReactAppStaticResource(templatePath, roothPath, salesforcePath, staticResourceName): Promise<void> {
     const staticResourcesPath = path.join(roothPath, salesforcePath+"/staticresources");
     const staticResourceCustomerPortalPath = path.join(roothPath, salesforcePath+"/staticresources/"+staticResourceName);
@@ -381,14 +404,27 @@ export default class ReactforceCreate extends SfdxCommand {
     if(!fs.existsSync(assetsMainJsDestPath)){
         fs.copyFileSync(assetsMainJsSrcPath, assetsMainJsDestPath);
     }
+
+    const appJsPath = path.join(reactAppPath, "/src/App.js");
+    if(fs.existsSync(appJsPath)){
+        let appJsContents = fs.readFileSync(appJsPath, "utf8");
+        // appJsContents = appJsContents.replace("import logo from './logo.svg'", () => {return "";});
+        appJsContents = appJsContents.replace(/<img src={logo}/g, () => {return "<img src={window.inlineApexAdaptor.landingResources+'/'+logo}";});
+        fs.writeFileSync(appJsPath, appJsContents);
+    }
+
     this.ux.log(messages.getMessage('reactFilesCopied'));
   }
 
-  private async createReactBuild(reactAppPath: string): Promise<void> {
+  private async createReactBuild(flags: object, reactAppPath: string): Promise<void> {
     this.ux.startSpinner(messages.getMessage('creatingReactAppBuild'));
     try {
         process.chdir(reactAppPath);
-        await exec('npm run pushToManagedPackage');
+        let buildCommand = 'npm run build';
+        if(flags['vanilla']){
+            buildCommand = 'npm run pushToManagedPackage';
+        }
+        await exec(buildCommand);
         this.ux.stopSpinner("done");
         this.ux.log(messages.getMessage('reactAppBuildReady'));
     } catch (error) {
@@ -412,11 +448,13 @@ export default class ReactforceCreate extends SfdxCommand {
         //Install react app
         await this.installReactApp(flags, reactforceFolder, appName);
 
-        //Modify package.json for customization
-        await this.modifyReactPackageJson(reactAppPath);
+        if(flags.vanilla){
+            //Modify package.json for customization
+            await this.modifyReactPackageJson(reactAppPath);
 
-        //Install modified react dependencies
-        await this.installDependencies(reactAppPath);
+            //Install modified react dependencies
+            await this.installDependencies(reactAppPath);
+        }
     }
     
     //Clone github template
@@ -425,11 +463,13 @@ export default class ReactforceCreate extends SfdxCommand {
     //Modify salesforce package
     await this.modifySalesforcePackage(flags, roothPath, templatesPath);
 
-    //Modify react app package
-    await this.modifyReactPackage(flags, templatesPath, reactAppPath);
+    if(flags.vanilla){
+        //Modify react app package
+        await this.modifyReactPackage(flags, templatesPath, reactAppPath);
+    }
 
     //Create react app build
-    await this.createReactBuild(reactAppPath);
+    await this.createReactBuild(flags, reactAppPath);
     await rm(tempFolder, {});
     this.ux.log(messages.getMessage("createCommandSuccess"));
     return {  };

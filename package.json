@@ -1,7 +1,7 @@
 {
   "name": "sfdx-react-plugin",
   "description": "A framework for developing and deploying ReactJS applications on Salesforce.com",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "author": "Ahmad Raza @virtualahmadraza",
   "bugs": {
     "url": "https://github.com/virtualahmadraza/sfdx-react-plugin/issues"
