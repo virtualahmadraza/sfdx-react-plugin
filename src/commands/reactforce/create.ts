@@ -409,7 +409,7 @@ export default class ReactforceCreate extends SfdxCommand {
     if(fs.existsSync(appJsPath)){
         let appJsContents = fs.readFileSync(appJsPath, "utf8");
         // appJsContents = appJsContents.replace("import logo from './logo.svg'", () => {return "";});
-        appJsContents = appJsContents.replace(/<img src={logo}/g, () => {return "<img src={window.inlineApexAdaptor.landingResources+'/'+logo}";});
+        appJsContents = appJsContents.replace(/<img src={logo}/g, () => {return "<img src={(window.hasOwnProperty('inlineApexAdaptor') ? window.inlineApexAdaptor.landingResources+'/': '')+logo}";});
         fs.writeFileSync(appJsPath, appJsContents);
     }
 
